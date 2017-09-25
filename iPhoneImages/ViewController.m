@@ -25,7 +25,20 @@
     
     NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithURL:url completionHandler:^(NSURL* location, NSURLResponse* response, NSError* error){
         
+        if (error) { // 1
+            //Handle the error
+            NSLog(@"error: %@", error.localizedDescription);
+            return;
+        }
         
+        NSData *data = [NSData dataWithContentsOfURL:location];
+        UIImage *image = [UIImage imageWithData:data]; // 2
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            //This will run on the main queue
+            
+            self.iPhoneImageView.image = image; //4
+        }];
         
     }]; // 4
     
